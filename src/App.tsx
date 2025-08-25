@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import Media from "./components/Media";
 import { ImageMediaData } from "./helpers/ImageMediaData";
 import { VideoMediaData } from "./helpers/VideoMediaData";
+import { PdfMediaData } from "./helpers/PdfMediaData";
 
 const nav = [
   { id: "home", label: "Home" },
@@ -47,8 +48,7 @@ export default function App() {
                 <br /> सेवा सार संघ
               </h1>
               <p className="mt-4 text-neutral-300">
-                Minimal, calm, and responsive. Drop in your photos and videos
-                and go live on Netlify.
+                भक्तांचा एकत्रित प्रवास श्रद्धा आणि सेवेसाठी
               </p>
               <div className="mt-6 flex gap-3">
                 <a href="#gallery" className="btn">
@@ -71,15 +71,30 @@ export default function App() {
         </section>
 
         {/* ABOUT */}
+
         <section id="about" className="container-p py-20">
-          <div className="card">
+          <div className="card p-6 border-l-4 border-yellow-400 bg-black/60">
             <h2 className="text-3xl font-semibold title-gradient">
               About the Work
             </h2>
-            <p className="mt-3 text-neutral-300">
-              This portfolio is built with Vite + React + Tailwind. It uses
-              native HTML video for maximum compatibility across Android, iOS,
-              Windows, and macOS.
+            <p className="mt-3 italic text-neutral-200 leading-relaxed">
+              "This devotional service was initiated by
+              <span className="font-semibold text-yellow-400">
+                {" "}
+                Shri Swami Samarth Maharaj
+              </span>{" "}
+              around 156 years ago. We continue to walk on His path, following
+              the principles laid down to understand the soul and attain true
+              happiness.{" "}
+              <span className="underline decoration-yellow-400/70">
+                Here, we guide devotees on how to practice bhakti in its purest
+                form, exactly as taught by Swami Samarth — revealing the deeper
+                meaning of life and devotion.
+              </span>
+              <br />
+              <span className="text-yellow-300 block mt-2">
+                Here, guidance is provided through the Guru–disciple tradition."
+              </span>
             </p>
           </div>
         </section>
@@ -131,6 +146,21 @@ export default function App() {
             })}
           </div>
         </section>
+        {/* PDFs */}
+        <section id="pdfs" className="container-p py-20">
+          <h2 className="text-3xl font-semibold title-gradient">PDFs</h2>
+          <div className="mt-6 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+            {PdfMediaData.map((item, idx) => (
+              <Media
+                key={idx}
+                kind="pdf"
+                src={item.src}
+                alt={item.title}
+                className="card h-40 flex items-center justify-center text-lg font-medium hover:bg-neutral-200 dark:hover:bg-neutral-800 transition"
+              />
+            ))}
+          </div>
+        </section>
 
         {/* VIDEOS */}
         <section id="videos" className="container-p py-20">
@@ -169,8 +199,8 @@ export default function App() {
                 ).value;
 
                 // WhatsApp deep link
-                // const phone = "9860295215";
-                const phone = "7385816591"; // TEMP
+                const phone = "9860295215";
+                // const phone = "7385816591"; // TEMP
                 const text = encodeURIComponent(`Hi, I am ${name}. ${message}`);
                 window.open(`https://wa.me/${phone}?text=${text}`, "_blank");
               }}
