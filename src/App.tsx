@@ -1,24 +1,67 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
 import { motion } from "framer-motion";
 import Media from "./components/Media";
-import { ImageMediaData } from "./helpers/ImageMediaData";
-import { VideoMediaData } from "./helpers/VideoMediaData";
-import { PdfMediaData } from "./helpers/PdfMediaData";
+
+const API_BASE = "https://swami-divine-backend.onrender.com/api";
 
 const nav = [
   { id: "home", label: "Home" },
   { id: "about", label: "About" },
   { id: "gallery", label: "Gallery" },
   { id: "videos", label: "Videos" },
+  { id: "pdfs", label: "PDFs" },
   { id: "contact", label: "Contact" },
 ];
 
 export default function App() {
+  const [images, setImages] = useState<any[]>([]);
+  const [videos, setVideos] = useState<any[]>([]);
+  const [pdfs, setPdfs] = useState<any[]>([]);
+  const [pageText, setPageText] = useState<any>(null);
+
+  // Fetch all data on mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const imgRes = await axios.get(`${API_BASE}/images`);
+        setImages(imgRes.data || []);
+      } catch (err) {
+        console.error("❌ Error fetching images:", err);
+      }
+
+      try {
+        const vidRes = await axios.get(`${API_BASE}/videos`);
+        setVideos(vidRes.data || []);
+      } catch (err) {
+        console.error("❌ Error fetching videos:", err);
+      }
+
+      try {
+        const pdfRes = await axios.get(`${API_BASE}/pdfs`);
+        setPdfs(pdfRes.data || []);
+      } catch (err) {
+        console.error("❌ Error fetching pdfs:", err);
+      }
+
+      try {
+        const textRes = await axios.get(`${API_BASE}/text`);
+        setPageText(textRes.data || null);
+      } catch (err) {
+        console.error("❌ Error fetching page text:", err);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div>
+      {/* HEADER */}
       <header className="sticky top-0 z-50 bg-neutral-950/70 backdrop-blur">
         <div className="container-p flex items-center justify-between py-3">
           <a href="#home" className="font-bold tracking-wide">
-            DIVINE ✨
+            DIVINE ✨ {images.length}
           </a>
           <nav className="hidden md:flex gap-4 text-sm">
             {nav.map((n) => (
@@ -40,15 +83,12 @@ export default function App() {
             className="grid items-center gap-10 md:grid-cols-2"
           >
             <div>
-              <h1
-                className="title-gradient text-5xl md:text-6xl font-extrabold leading-normal md:leading-snug"
-                style={{ overflowWrap: "break-word" }}
-              >
+              <h1 className="title-gradient text-5xl md:text-6xl font-extrabold leading-normal md:leading-snug">
                 श्री स्वामी समर्थ
                 <br /> सेवा सार संघ
               </h1>
               <p className="mt-4 text-neutral-300">
-                भक्तांचा एकत्रित प्रवास श्रद्धा आणि सेवेसाठी
+                भक्तांचा एकत्रित प्रवास श्रद्धा विश्वास आणि सेवेसाठी
               </p>
               <div className="mt-6 flex gap-3">
                 <a href="#gallery" className="btn">
@@ -60,12 +100,14 @@ export default function App() {
               </div>
             </div>
             <div className="card">
-              <Media
-                kind="image"
-                src="/media/hero.jpg"
-                alt="Hero"
-                className="w-full rounded-2xl"
-              />
+              {images.length > 0 && (
+                <Media
+                  kind="image"
+                  src={images[images.length - 1].url}
+                  alt="Hero"
+                  className="w-full rounded-2xl"
+                />
+              )}
             </div>
           </motion.div>
         </section>
@@ -103,58 +145,46 @@ export default function App() {
         <section id="gallery" className="container-p py-20">
           <h2 className="text-3xl font-semibold title-gradient">Gallery</h2>
           <div className="mt-6 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-            {ImageMediaData.map((item, idx) => {
-              const ext = item.src.substring(item.src.lastIndexOf(".")); // ".jpeg"
-              const prefix = item.src.substring(
-                0,
-                item.src.lastIndexOf("-") + 1
-              ); // "/media/Seva-photo-"
-              const src = `${prefix}${idx + 1}${ext}`;
-              const alt = `${item.alt}_${idx + 1}`;
-
-              return (
-                <div
-                  key={idx}
-                  className="w-full h-64 flex items-center justify-center rounded-2xl bg-neutral-900/40 relative group"
+            {images.map((item, idx) => (
+              <div
+                key={idx}
+                className="w-full h-64 flex items-center justify-center rounded-2xl bg-neutral-900/40 relative group"
+              >
+                <a
+                  href={item.url}
+                  download={item.name}
+                  className="w-full h-full flex items-center justify-center"
                 >
-                  {/* download wrapper */}
+                  <Media
+                    kind="image"
+                    src={item.url}
+                    alt={item.name}
+                    className="max-w-full max-h-full object-contain rounded-2xl"
+                  />
+                </a>
+                <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition">
                   <a
-                    href={src}
-                    download={alt}
-                    className="w-full h-full flex items-center justify-center"
+                    href={item.url}
+                    download={item.name}
+                    className="bg-black/60 text-white text-xs px-2 py-1 rounded-md"
                   >
-                    <Media
-                      kind="image"
-                      src={src}
-                      alt={alt}
-                      className="max-w-full max-h-full object-contain rounded-2xl"
-                    />
+                    ⬇ Download
                   </a>
-
-                  {/* optional download icon overlay */}
-                  <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition">
-                    <a
-                      href={src}
-                      download={alt}
-                      className="bg-black/60 text-white text-xs px-2 py-1 rounded-md"
-                    >
-                      ⬇ Download
-                    </a>
-                  </div>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
         </section>
+
         {/* PDFs */}
         <section id="pdfs" className="container-p py-20">
           <h2 className="text-3xl font-semibold title-gradient">PDFs</h2>
           <div className="mt-6 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-            {PdfMediaData.map((item, idx) => (
+            {pdfs.map((item, idx) => (
               <Media
                 key={idx}
                 kind="pdf"
-                src={item.src}
+                src={item.url}
                 alt={item.title}
                 className="card h-40 flex items-center justify-center text-lg font-medium hover:bg-neutral-200 dark:hover:bg-neutral-800 transition"
               />
@@ -166,11 +196,11 @@ export default function App() {
         <section id="videos" className="container-p py-20">
           <h2 className="text-3xl font-semibold title-gradient">Videos</h2>
           <div className="mt-6 grid gap-6 md:grid-cols-2">
-            {VideoMediaData.map((item, idx) => (
+            {videos.map((item, idx) => (
               <Media
                 key={idx}
-                kind={"video"}
-                src={item.src}
+                kind="video"
+                src={item.url}
                 poster={item.poster}
                 className="w-full h-72 rounded-2xl object-cover"
               />
