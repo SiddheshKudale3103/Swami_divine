@@ -201,7 +201,7 @@ export default function App() {
                 key={idx}
                 kind="video"
                 src={item.url}
-                poster={"../src/assets/Thumbnail.jpeg"}
+                poster={"/media/Thumbnail.jpeg"}
                 className="w-full h-72 rounded-2xl object-cover"
               />
             ))}
