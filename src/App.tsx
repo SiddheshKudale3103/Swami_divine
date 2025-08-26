@@ -61,7 +61,7 @@ export default function App() {
       <header className="sticky top-0 z-50 bg-neutral-950/70 backdrop-blur">
         <div className="container-p flex items-center justify-between py-3">
           <a href="#home" className="font-bold tracking-wide">
-            DIVINE ✨ {images.length}
+            DIVINE ✨
           </a>
           <nav className="hidden md:flex gap-4 text-sm">
             {nav.map((n) => (
