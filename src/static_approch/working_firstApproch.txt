@@ -1,5 +1,8 @@
 import { motion } from "framer-motion";
 import Media from "./components/Media";
+import { ImageMediaData } from "./helpers/ImageMediaData";
+import { VideoMediaData } from "./helpers/VideoMediaData";
+import { PdfMediaData } from "./helpers/PdfMediaData";
 
 const nav = [
   { id: "home", label: "Home" },
@@ -95,35 +98,83 @@ export default function App() {
             </p>
           </div>
         </section>
+
+        {/* GALLERY */}
         <section id="gallery" className="container-p py-20">
           <h2 className="text-3xl font-semibold title-gradient">Gallery</h2>
+          <div className="mt-6 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+            {ImageMediaData.map((item, idx) => {
+              const ext = item.src.substring(item.src.lastIndexOf(".")); // ".jpeg"
+              const prefix = item.src.substring(
+                0,
+                item.src.lastIndexOf("-") + 1
+              ); // "/media/Seva-photo-"
+              const src = `${prefix}${idx + 1}${ext}`;
+              const alt = `${item.alt}_${idx + 1}`;
 
-          <div className="card overflow-hidden">
-            <iframe
-              src="https://drive.google.com/embeddedfolderview?id=1zJsfZJrZSQ_AfI9pi1VlBlrvUqj_jj2a#grid"
-              style={{ width: "100%", height: "700px", border: 0 }}
-            />
+              return (
+                <div
+                  key={idx}
+                  className="w-full h-64 flex items-center justify-center rounded-2xl bg-neutral-900/40 relative group"
+                >
+                  {/* download wrapper */}
+                  <a
+                    href={src}
+                    download={alt}
+                    className="w-full h-full flex items-center justify-center"
+                  >
+                    <Media
+                      kind="image"
+                      src={src}
+                      alt={alt}
+                      className="max-w-full max-h-full object-contain rounded-2xl"
+                    />
+                  </a>
+
+                  {/* optional download icon overlay */}
+                  <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition">
+                    <a
+                      href={src}
+                      download={alt}
+                      className="bg-black/60 text-white text-xs px-2 py-1 rounded-md"
+                    >
+                      ⬇ Download
+                    </a>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </section>
+        {/* PDFs */}
         <section id="pdfs" className="container-p py-20">
           <h2 className="text-3xl font-semibold title-gradient">PDFs</h2>
-
-          <div className="mt-6 card overflow-hidden">
-            <iframe
-              src="https://drive.google.com/embeddedfolderview?id=1TB6QzKmfDZiiUGfW9Z1b9ZxD7QFZy0fc#grid"
-              style={{ width: "100%", height: "600px", border: 0 }}
-            />
+          <div className="mt-6 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+            {PdfMediaData.map((item, idx) => (
+              <Media
+                key={idx}
+                kind="pdf"
+                src={item.src}
+                alt={item.title}
+                className="card h-40 flex items-center justify-center text-lg font-medium hover:bg-neutral-200 dark:hover:bg-neutral-800 transition"
+              />
+            ))}
           </div>
         </section>
 
+        {/* VIDEOS */}
         <section id="videos" className="container-p py-20">
           <h2 className="text-3xl font-semibold title-gradient">Videos</h2>
-
-          <div className="mt-6 card overflow-hidden">
-            <iframe
-              src="https://drive.google.com/embeddedfolderview?id=1GpDAfz8u2JhCoXYHnUa_X25UkCv82o2W#grid"
-              style={{ width: "100%", height: "700px", border: 0 }}
-            />
+          <div className="mt-6 grid gap-6 md:grid-cols-2">
+            {VideoMediaData.map((item, idx) => (
+              <Media
+                key={idx}
+                kind={"video"}
+                src={item.src}
+                poster={item.poster}
+                className="w-full h-72 rounded-2xl object-cover"
+              />
+            ))}
           </div>
         </section>
 
