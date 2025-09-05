@@ -103,7 +103,7 @@ export default function App() {
               {images.length > 0 && (
                 <Media
                   kind="image"
-                  src={images[images.length - 1].url}
+                  src="/media/logo/hero.jpg"
                   alt="Hero"
                   className="w-full rounded-2xl"
                 />
