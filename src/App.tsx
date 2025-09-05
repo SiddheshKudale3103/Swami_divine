@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import Media from "./components/Media";
+import { PdfMediaData } from "./helpers/PdfMediaData";
 
 const API_BASE = "https://swami-divine-backend.onrender.com/api";
 
@@ -179,16 +180,14 @@ export default function App() {
         <section id="pdfs" className="container-p py-20">
           <h2 className="text-3xl font-semibold title-gradient">PDFs</h2>
           <div className="mt-6 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-            {pdfs.map((item, idx) => (
-              <a
+            {PdfMediaData.map((item, idx) => (
+              <Media
                 key={idx}
-                href={item.url}
-                target="_blank"
-                rel="noopener noreferrer"
+                kind="pdf"
+                src={item.src}
+                alt={item.title}
                 className="card h-40 flex items-center justify-center text-lg font-medium hover:bg-neutral-200 dark:hover:bg-neutral-800 transition"
-              >
-                📄 {item.public_id.split("/").pop()} {/* ✅ show filename */}
-              </a>
+              />
             ))}
           </div>
         </section>
