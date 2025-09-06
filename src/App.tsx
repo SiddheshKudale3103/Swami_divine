@@ -9,8 +9,8 @@ const API_BASE = "https://swami-divine-backend.onrender.com/api";
 
 const nav = [
   { id: "home", label: "Home" },
-  { id: "about", label: "About" },
-  { id: "gallery", label: "Gallery" },
+  { id: "posters", label: "Poster" },
+  { id: "gallery", label: "Photos" },
   { id: "videos", label: "Videos" },
   { id: "pdfs", label: "PDFs" },
   { id: "contact", label: "Contact" },
@@ -22,7 +22,6 @@ export default function App() {
   const [pdfs, setPdfs] = useState<any[]>([]);
   const [pageText, setPageText] = useState<any>(null);
 
-  // Fetch all data on mount
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -61,11 +60,11 @@ export default function App() {
     <div>
       {/* HEADER */}
       <header className="sticky top-0 z-50 bg-neutral-950/70 backdrop-blur">
-        <div className="container-p flex items-center justify-between py-3">
+        <div className="px-4 sm:px-6 lg:px-12 flex flex-col sm:flex-row sm:items-center sm:justify-between py-3 gap-2 sm:gap-0">
           <a href="#home" className="font-bold tracking-wide">
             DIVINE ✨
           </a>
-          <nav className="hidden md:flex gap-4 text-sm">
+          <nav className="flex flex-wrap gap-3 text-sm">
             {nav.map((n) => (
               <a key={n.id} href={"#" + n.id} className="btn">
                 {n.label}
@@ -77,7 +76,7 @@ export default function App() {
 
       <main>
         {/* HERO */}
-        <section id="home" className="container-p py-24">
+        <section id="home" className="px-4 sm:px-6 lg:px-12 py-16 sm:py-24">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -85,14 +84,14 @@ export default function App() {
             className="grid items-center gap-10 md:grid-cols-2"
           >
             <div>
-              <h1 className="title-gradient text-5xl md:text-6xl font-extrabold leading-normal md:leading-snug">
+              <h1 className="title-gradient text-3xl sm:text-4xl md:text-6xl font-extrabold leading-snug">
                 श्री स्वामी समर्थ
                 <br /> सेवा सार संघ
               </h1>
               <p className="mt-4 text-neutral-300">
                 भक्तांचा एकत्रित प्रवास श्रद्धा विश्वास आणि सेवेसाठी
               </p>
-              <div className="mt-6 flex gap-3">
+              {/* <div className="mt-6 flex flex-wrap gap-2">
                 <a href="#gallery" className="btn">
                   Photos
                 </a>
@@ -108,7 +107,7 @@ export default function App() {
                 <a href="#contact" className="btn">
                   Contact
                 </a>
-              </div>
+              </div> */}
             </div>
             <div className="card">
               {images.length > 0 && (
@@ -124,10 +123,9 @@ export default function App() {
         </section>
 
         {/* ABOUT */}
-
-        <section id="about" className="container-p py-20">
+        <section id="about" className="px-4 sm:px-6 lg:px-12 py-20">
           <div className="card p-6 border-l-4 border-yellow-400 bg-black/60">
-            <h2 className="text-3xl font-semibold title-gradient">
+            <h2 className="text-2xl sm:text-3xl font-semibold title-gradient">
               About the Work
             </h2>
             <p className="mt-3 italic text-neutral-200 leading-relaxed">
@@ -151,10 +149,13 @@ export default function App() {
             </p>
           </div>
         </section>
+
         {/* GALLERY */}
-        <section id="gallery" className="container-p py-20">
-          <h2 className="text-3xl font-semibold title-gradient">Gallery</h2>
-          <div className="mt-6 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+        <section id="gallery" className="px-4 sm:px-6 lg:px-12 py-20">
+          <h2 className="text-2xl sm:text-3xl font-semibold title-gradient">
+            Gallery
+          </h2>
+          <div className="mt-6 grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
             {images.map((item, idx) => (
               <div
                 key={idx}
@@ -162,20 +163,20 @@ export default function App() {
               >
                 <a
                   href={item.url}
-                  download={item.public_id} // ✅ use public_id
+                  download={item.public_id}
                   className="w-full h-full flex items-center justify-center"
                 >
                   <Media
                     kind="image"
                     src={item.url}
-                    alt={item.public_id} // ✅ use public_id as alt
+                    alt={item.public_id}
                     className="max-w-full max-h-full object-contain rounded-2xl"
                   />
                 </a>
                 <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition">
                   <a
                     href={item.url}
-                    download={item.public_id} // ✅
+                    download={item.public_id}
                     className="bg-black/60 text-white text-xs px-2 py-1 rounded-md"
                   >
                     ⬇ Download
@@ -187,9 +188,11 @@ export default function App() {
         </section>
 
         {/* PDFs */}
-        <section id="pdfs" className="container-p py-20">
-          <h2 className="text-3xl font-semibold title-gradient">PDFs</h2>
-          <div className="mt-6 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+        <section id="pdfs" className="px-4 sm:px-6 lg:px-12 py-20">
+          <h2 className="text-2xl sm:text-3xl font-semibold title-gradient">
+            PDFs
+          </h2>
+          <div className="mt-6 grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
             {PdfMediaData.map((item, idx) => (
               <Media
                 key={idx}
@@ -202,15 +205,18 @@ export default function App() {
           </div>
         </section>
 
-        <section id="posters" className="container-p py-20">
-          <h2 className="text-3xl font-semibold title-gradient">Posters</h2>
-          <div className="mt-6 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+        {/* POSTERS */}
+        <section id="posters" className="px-4 sm:px-6 lg:px-12 py-20">
+          <h2 className="text-2xl sm:text-3xl font-semibold title-gradient">
+            Posters
+          </h2>
+          <div className="mt-6 grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
             {ImageMediaData.map((item, idx) => {
-              const ext = item.src.substring(item.src.lastIndexOf(".")); // ".jpeg"
+              const ext = item.src.substring(item.src.lastIndexOf("."));
               const prefix = item.src.substring(
                 0,
                 item.src.lastIndexOf("-") + 1
-              ); // "/media/Seva-photo-"
+              );
               const src = `${prefix}${idx + 1}${ext}`;
               const alt = `${item.alt}_${idx + 1}`;
 
@@ -219,7 +225,6 @@ export default function App() {
                   key={idx}
                   className="w-full h-64 flex items-center justify-center rounded-2xl bg-neutral-900/40 relative group"
                 >
-                  {/* download wrapper */}
                   <a
                     href={src}
                     download={alt}
@@ -232,8 +237,6 @@ export default function App() {
                       className="max-w-full max-h-full object-contain rounded-2xl"
                     />
                   </a>
-
-                  {/* optional download icon overlay */}
                   <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition">
                     <a
                       href={src}
@@ -250,9 +253,11 @@ export default function App() {
         </section>
 
         {/* VIDEOS */}
-        <section id="videos" className="container-p py-20">
-          <h2 className="text-3xl font-semibold title-gradient">Videos</h2>
-          <div className="mt-6 grid gap-6 md:grid-cols-2">
+        <section id="videos" className="px-4 sm:px-6 lg:px-12 py-20">
+          <h2 className="text-2xl sm:text-3xl font-semibold title-gradient">
+            Videos
+          </h2>
+          <div className="mt-6 grid gap-6 grid-cols-1 md:grid-cols-2">
             {videos.map((item, idx) => (
               <Media
                 key={idx}
@@ -260,16 +265,18 @@ export default function App() {
                 src={item.url}
                 alt={item.public_id}
                 poster={"/media/Thumbnail.jpeg"}
-                className="w-full h-72 rounded-2xl object-cover"
+                className="w-full aspect-video rounded-2xl object-cover"
               />
             ))}
           </div>
         </section>
 
         {/* CONTACT */}
-        <section id="contact" className="container-p py-20">
+        <section id="contact" className="px-4 sm:px-6 lg:px-12 py-20">
           <div className="card">
-            <h2 className="text-3xl font-semibold title-gradient">Contact</h2>
+            <h2 className="text-2xl sm:text-3xl font-semibold title-gradient">
+              Contact
+            </h2>
             <p className="mt-3 text-neutral-300">
               Drop a message or blessing ✨
             </p>
@@ -286,9 +293,7 @@ export default function App() {
                   form.elements.namedItem("message") as HTMLTextAreaElement
                 ).value;
 
-                // WhatsApp deep link
                 const phone = "9860295215";
-                // const phone = "7385816591"; // TEMP
                 const text = encodeURIComponent(`Hi, I am ${name}. ${message}`);
                 window.open(`https://wa.me/${phone}?text=${text}`, "_blank");
               }}
@@ -316,7 +321,7 @@ export default function App() {
       </main>
 
       <footer className="border-t border-white/10 py-8 mt-10">
-        <div className="container-p text-sm text-neutral-400">
+        <div className="px-4 sm:px-6 lg:px-12 text-sm text-neutral-400">
           © {new Date().getFullYear()} Divine • Built with ❤️
         </div>
       </footer>
