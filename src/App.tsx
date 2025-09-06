@@ -3,6 +3,7 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import Media from "./components/Media";
 import { PdfMediaData } from "./helpers/PdfMediaData";
+import { ImageMediaData } from "./helpers/ImageMediaData";
 
 const API_BASE = "https://swami-divine-backend.onrender.com/api";
 
@@ -93,7 +94,16 @@ export default function App() {
               </p>
               <div className="mt-6 flex gap-3">
                 <a href="#gallery" className="btn">
-                  See Gallery
+                  Photos
+                </a>
+                <a href="#pdfs" className="btn">
+                  PDF
+                </a>
+                <a href="#videos" className="btn">
+                  Videos
+                </a>
+                <a href="#posters" className="btn">
+                  Poster
                 </a>
                 <a href="#contact" className="btn">
                   Contact
@@ -189,6 +199,53 @@ export default function App() {
                 className="card h-40 flex items-center justify-center text-lg font-medium hover:bg-neutral-200 dark:hover:bg-neutral-800 transition"
               />
             ))}
+          </div>
+        </section>
+
+        <section id="posters" className="container-p py-20">
+          <h2 className="text-3xl font-semibold title-gradient">Posters</h2>
+          <div className="mt-6 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+            {ImageMediaData.map((item, idx) => {
+              const ext = item.src.substring(item.src.lastIndexOf(".")); // ".jpeg"
+              const prefix = item.src.substring(
+                0,
+                item.src.lastIndexOf("-") + 1
+              ); // "/media/Seva-photo-"
+              const src = `${prefix}${idx + 1}${ext}`;
+              const alt = `${item.alt}_${idx + 1}`;
+
+              return (
+                <div
+                  key={idx}
+                  className="w-full h-64 flex items-center justify-center rounded-2xl bg-neutral-900/40 relative group"
+                >
+                  {/* download wrapper */}
+                  <a
+                    href={src}
+                    download={alt}
+                    className="w-full h-full flex items-center justify-center"
+                  >
+                    <Media
+                      kind="image"
+                      src={src}
+                      alt={alt}
+                      className="max-w-full max-h-full object-contain rounded-2xl"
+                    />
+                  </a>
+
+                  {/* optional download icon overlay */}
+                  <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition">
+                    <a
+                      href={src}
+                      download={alt}
+                      className="bg-black/60 text-white text-xs px-2 py-1 rounded-md"
+                    >
+                      ⬇ Download
+                    </a>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </section>
 
