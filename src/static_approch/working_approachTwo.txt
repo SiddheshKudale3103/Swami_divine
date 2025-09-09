@@ -1,7 +1,11 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
 import { motion } from "framer-motion";
 import Media from "./components/Media";
 import { PdfMediaData } from "./helpers/PdfMediaData";
-import useMediaData from "./hooks/useMediaData";
+import { ImageMediaData } from "./helpers/ImageMediaData";
+
+const API_BASE = "https://swami-divine-backend.onrender.com/api";
 
 const nav = [
   { id: "home", label: "Home" },
@@ -13,19 +17,44 @@ const nav = [
 ];
 
 export default function App() {
-  const {
-    images,
-    videos,
-    posters,
-    pdfs,
-    pageText,
-    loadMoreImages,
-    loadMoreVideos,
-    loadMorePosters,
-    allImages,
-    allVideos,
-    allPosters,
-  } = useMediaData();
+  const [images, setImages] = useState<any[]>([]);
+  const [videos, setVideos] = useState<any[]>([]);
+  const [pdfs, setPdfs] = useState<any[]>([]);
+  const [pageText, setPageText] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const imgRes = await axios.get(`${API_BASE}/images?page=1&limit=5`);
+        setImages(imgRes.data || []);
+      } catch (err) {
+        console.error("❌ Error fetching images:", err);
+      }
+
+      try {
+        const vidRes = await axios.get(`${API_BASE}/videos`);
+        setVideos(vidRes.data || []);
+      } catch (err) {
+        console.error("❌ Error fetching videos:", err);
+      }
+
+      try {
+        const pdfRes = await axios.get(`${API_BASE}/pdfs`);
+        setPdfs(pdfRes.data || []);
+      } catch (err) {
+        console.error("❌ Error fetching pdfs:", err);
+      }
+
+      try {
+        const textRes = await axios.get(`${API_BASE}/text`);
+        setPageText(textRes.data || null);
+      } catch (err) {
+        console.error("❌ Error fetching page text:", err);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div>
@@ -62,6 +91,23 @@ export default function App() {
               <p className="mt-4 text-neutral-300">
                 भक्तांचा एकत्रित प्रवास श्रद्धा विश्वास आणि सेवेसाठी
               </p>
+              {/* <div className="mt-6 flex flex-wrap gap-2">
+                <a href="#gallery" className="btn">
+                  Photos
+                </a>
+                <a href="#pdfs" className="btn">
+                  PDF
+                </a>
+                <a href="#videos" className="btn">
+                  Videos
+                </a>
+                <a href="#posters" className="btn">
+                  Posters
+                </a>
+                <a href="#contact" className="btn">
+                  Contact
+                </a>
+              </div> */}
             </div>
             <div className="card">
               {images.length > 0 && (
@@ -107,7 +153,7 @@ export default function App() {
         {/* GALLERY */}
         <section id="gallery" className="px-4 sm:px-6 lg:px-12 py-20">
           <h2 className="text-2xl sm:text-3xl font-semibold title-gradient">
-            Gallery
+            Gallery {images.length}
           </h2>
           <div className="mt-6 grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
             {images.map((item, idx) => (
@@ -139,11 +185,6 @@ export default function App() {
               </div>
             ))}
           </div>
-          {images.length < allImages.length && (
-            <button onClick={loadMoreImages} className="btn mt-4">
-              Load More Images
-            </button>
-          )}
         </section>
 
         {/* PDFs */}
@@ -170,7 +211,7 @@ export default function App() {
             Posters
           </h2>
           <div className="mt-6 grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-            {posters.map((item, idx) => {
+            {ImageMediaData.map((item, idx) => {
               const ext = item.src.substring(item.src.lastIndexOf("."));
               const prefix = item.src.substring(
                 0,
@@ -209,11 +250,6 @@ export default function App() {
               );
             })}
           </div>
-          {posters.length < allPosters.length && (
-            <button onClick={loadMorePosters} className="btn mt-4">
-              Load More Posters
-            </button>
-          )}
         </section>
 
         {/* VIDEOS */}
@@ -233,11 +269,6 @@ export default function App() {
               />
             ))}
           </div>
-          {videos.length < allVideos.length && (
-            <button onClick={loadMoreVideos} className="btn mt-4">
-              Load More Videos
-            </button>
-          )}
         </section>
 
         {/* CONTACT */}
