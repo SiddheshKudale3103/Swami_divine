@@ -9,7 +9,7 @@ const API_BASE = "https://swami-divine-backend.onrender.com/api";
 
 const nav = [
   { id: "home", label: "Home" },
-  { id: "posters", label: "Poster" },
+  { id: "posters", label: "Posters" },
   { id: "gallery", label: "Photos" },
   { id: "videos", label: "Videos" },
   { id: "pdfs", label: "PDFs" },
@@ -102,7 +102,7 @@ export default function App() {
                   Videos
                 </a>
                 <a href="#posters" className="btn">
-                  Poster
+                  Posters
                 </a>
                 <a href="#contact" className="btn">
                   Contact
