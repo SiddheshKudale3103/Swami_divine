@@ -264,7 +264,7 @@ export default function App() {
                 kind="video"
                 src={item.url}
                 alt={item.public_id}
-                poster={"/media/Thumbnail.jpeg"}
+                poster={"/media/thumbnail/Thumbnail.jpeg"}
                 className="w-full aspect-video rounded-2xl object-cover"
               />
             ))}

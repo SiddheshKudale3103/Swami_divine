@@ -4,6 +4,7 @@ type MediaProps = {
   poster?: string;
   className?: string;
   kind: "image" | "video" | "pdf";
+  loading: "lazy" | "eager";
 };
 
 export default function Media({
@@ -12,13 +13,14 @@ export default function Media({
   poster,
   className,
   kind,
+  loading = "lazy",
 }: MediaProps) {
   if (kind === "image") {
     return (
       <img
         src={src}
         alt={alt ?? ""}
-        loading="lazy"
+        loading={loading}
         className={className ?? "w-full rounded-2xl"}
       />
     );

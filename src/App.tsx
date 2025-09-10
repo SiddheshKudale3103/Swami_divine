@@ -65,31 +65,28 @@ export default function App() {
             </div>
             <div className="card">
               {images.length > 0 && (
-                <Media
-                  kind="image"
-                  src="/media/logo/hero.jpg"
-                  alt="Hero"
+                <motion.img
+                  src="/media/logo/hero.webp"
+                  alt="Swami Logo"
                   className="w-full rounded-2xl"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8 }}
+                  loading={"eager"}
                 />
               )}
             </div>
           </motion.div>
         </section>
         {/* BANNER */}
-        {/* <section id="banner" className="w-full">
-          <img
-            src="/media/banner/banner1.jpeg"
-            alt="Swami Banner"
-            className="w-full h-auto object-contain md:object-cover rounded-none"
-          />
-        </section> */}
         <motion.img
-          src="/media/banner/banner3.jpg"
+          src="/media/banner/banner3.webp"
           alt="Swami Banner"
           className="w-full h-auto object-contain md:object-cover rounded-none"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
+          loading={"eager"}
         />
 
         {/* ABOUT */}
@@ -141,6 +138,7 @@ export default function App() {
                     src={item.url}
                     alt={item.public_id}
                     className="max-w-full max-h-full object-contain rounded-2xl"
+                    loading={"lazy"}
                   />
                 </a>
                 <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition">
@@ -175,6 +173,7 @@ export default function App() {
                 src={item.src}
                 alt={item.title}
                 className="card h-40 flex items-center justify-center text-lg font-medium hover:bg-neutral-200 dark:hover:bg-neutral-800 transition"
+                loading={"lazy"}
               />
             ))}
           </div>
@@ -210,6 +209,7 @@ export default function App() {
                       src={src}
                       alt={alt}
                       className="max-w-full max-h-full object-contain rounded-2xl"
+                      loading={"lazy"}
                     />
                   </a>
                   <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition">
@@ -244,8 +244,9 @@ export default function App() {
                 kind="video"
                 src={item.url}
                 alt={item.public_id}
-                poster={"/media/Thumbnail.jpeg"}
+                poster={"/media/thumbnail/Thumbnail.jpeg"}
                 className="w-full aspect-video rounded-2xl object-cover"
+                loading={"lazy"}
               />
             ))}
           </div>
