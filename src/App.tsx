@@ -75,6 +75,22 @@ export default function App() {
             </div>
           </motion.div>
         </section>
+        {/* BANNER */}
+        {/* <section id="banner" className="w-full">
+          <img
+            src="/media/banner/banner1.jpeg"
+            alt="Swami Banner"
+            className="w-full h-auto object-contain md:object-cover rounded-none"
+          />
+        </section> */}
+        <motion.img
+          src="/media/banner/banner3.jpg"
+          alt="Swami Banner"
+          className="w-full h-auto object-contain md:object-cover rounded-none"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        />
 
         {/* ABOUT */}
         <section id="about" className="px-4 sm:px-6 lg:px-12 py-20">
