@@ -2,15 +2,10 @@ import { motion } from "framer-motion";
 import Media from "./components/Media";
 import { PdfMediaData } from "./helpers/PdfMediaData";
 import useMediaData from "./hooks/useMediaData";
-
-const nav = [
-  { id: "home", label: "Home" },
-  { id: "posters", label: "Posters" },
-  { id: "gallery", label: "Photos" },
-  { id: "videos", label: "Videos" },
-  { id: "pdfs", label: "PDFs" },
-  { id: "contact", label: "Contact" },
-];
+import { useState } from "react";
+import en from "./translations/en";
+import mr from "./translations/mr";
+const translations = { en, mr };
 
 export default function App() {
   const {
@@ -18,7 +13,6 @@ export default function App() {
     videos,
     posters,
     pdfs,
-    pageText,
     loadMoreImages,
     loadMoreVideos,
     loadMorePosters,
@@ -26,6 +20,9 @@ export default function App() {
     allVideos,
     allPosters,
   } = useMediaData();
+
+  const [lang, setLang] = useState<"en" | "mr">("en");
+  const t = translations[lang];
 
   return (
     <div>
@@ -36,12 +33,27 @@ export default function App() {
             DIVINE ✨
           </a>
           <nav className="flex flex-wrap gap-3 text-sm">
-            {nav.map((n) => (
-              <a key={n.id} href={"#" + n.id} className="btn">
-                {n.label}
+            {Object.entries(t.nav).map(([id, label]) => (
+              <a
+                key={id}
+                href={"#" + id}
+                className="relative px-3 py-1 transition 
+                 text-neutral-300 hover:text-yellow-400 
+                 after:content-[''] after:absolute after:left-0 after:-bottom-1 
+                 after:h-[2px] after:w-0 after:bg-yellow-400 
+                 after:transition-all after:duration-300 
+                 hover:after:w-full"
+              >
+                {label}
               </a>
             ))}
           </nav>
+          <button
+            onClick={() => setLang(lang === "en" ? "mr" : "en")}
+            className="ml-4 px-3 py-1 rounded bg-yellow-400 text-black"
+          >
+            {lang === "en" ? "मराठी" : "EN"}
+          </button>
         </div>
       </header>
 
@@ -55,13 +67,15 @@ export default function App() {
             className="grid items-center gap-10 md:grid-cols-2"
           >
             <div>
-              <h1 className="title-gradient text-3xl sm:text-4xl md:text-6xl font-extrabold leading-snug">
-                श्री स्वामी समर्थ
-                <br /> सेवा सार संघ
+              <h1
+                className="title-gradient font-extrabold 
+             text-3xl sm:text-5xl md:text-7xl 
+             leading-tight sm:leading-snug md:leading-normal 
+             break-words"
+              >
+                {t.hero.title}
               </h1>
-              <p className="mt-4 text-neutral-300">
-                भक्तांचा एकत्रित प्रवास श्रद्धा विश्वास आणि सेवेसाठी
-              </p>
+              <p className="mt-4 text-neutral-300">{t.hero.subtitle}</p>
             </div>
             <div className="card">
               {images.length > 0 && (
@@ -78,6 +92,7 @@ export default function App() {
             </div>
           </motion.div>
         </section>
+
         {/* BANNER */}
         <motion.img
           src="/media/banner/banner3.webp"
@@ -93,25 +108,13 @@ export default function App() {
         <section id="about" className="px-4 sm:px-6 lg:px-12 py-20">
           <div className="card p-6 border-l-4 border-yellow-400 bg-black/60">
             <h2 className="text-2xl sm:text-3xl font-semibold title-gradient">
-              About the Work
+              {t.about.heading}
             </h2>
             <p className="mt-3 italic text-neutral-200 leading-relaxed">
-              "This devotional service was initiated by
-              <span className="font-semibold text-yellow-400">
-                {" "}
-                Shri Swami Samarth Maharaj
-              </span>{" "}
-              around 156 years ago. We continue to walk on His path, following
-              the principles laid down to understand the soul and attain true
-              happiness.{" "}
-              <span className="underline decoration-yellow-400/70">
-                Here, we guide devotees on how to practice bhakti in its purest
-                form, exactly as taught by Swami Samarth — revealing the deeper
-                meaning of life and devotion.
-              </span>
+              {t.about.text}
               <br />
               <span className="text-yellow-300 block mt-2">
-                Here, guidance is provided through the Guru–disciple tradition."
+                {t.about.subtext}
               </span>
             </p>
           </div>
@@ -120,7 +123,7 @@ export default function App() {
         {/* GALLERY */}
         <section id="gallery" className="px-4 sm:px-6 lg:px-12 py-20">
           <h2 className="text-2xl sm:text-3xl font-semibold title-gradient">
-            Gallery
+            {t.gallery.heading}
           </h2>
           <div className="mt-6 grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
             {images.map((item, idx) => (
@@ -147,7 +150,7 @@ export default function App() {
                     download={item.public_id}
                     className="bg-black/60 text-white text-xs px-2 py-1 rounded-md"
                   >
-                    ⬇ Download
+                    {t.gallery.download}
                   </a>
                 </div>
               </div>
@@ -155,7 +158,7 @@ export default function App() {
           </div>
           {images.length < allImages.length && (
             <button onClick={loadMoreImages} className="btn mt-4">
-              Load More Images
+              {t.gallery.loadMore}
             </button>
           )}
         </section>
@@ -163,7 +166,7 @@ export default function App() {
         {/* PDFs */}
         <section id="pdfs" className="px-4 sm:px-6 lg:px-12 py-20">
           <h2 className="text-2xl sm:text-3xl font-semibold title-gradient">
-            PDFs
+            {t.pdfs.heading}
           </h2>
           <div className="mt-6 grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
             {PdfMediaData.map((item, idx) => (
@@ -182,7 +185,7 @@ export default function App() {
         {/* POSTERS */}
         <section id="posters" className="px-4 sm:px-6 lg:px-12 py-20">
           <h2 className="text-2xl sm:text-3xl font-semibold title-gradient">
-            Posters
+            {t.posters.heading}
           </h2>
           <div className="mt-6 grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
             {posters.map((item, idx) => {
@@ -218,7 +221,7 @@ export default function App() {
                       download={alt}
                       className="bg-black/60 text-white text-xs px-2 py-1 rounded-md"
                     >
-                      ⬇ Download
+                      {t.posters.download}
                     </a>
                   </div>
                 </div>
@@ -227,7 +230,7 @@ export default function App() {
           </div>
           {posters.length < allPosters.length && (
             <button onClick={loadMorePosters} className="btn mt-4">
-              Load More Posters
+              {t.posters.loadMore}
             </button>
           )}
         </section>
@@ -235,7 +238,7 @@ export default function App() {
         {/* VIDEOS */}
         <section id="videos" className="px-4 sm:px-6 lg:px-12 py-20">
           <h2 className="text-2xl sm:text-3xl font-semibold title-gradient">
-            Videos
+            {t.videos.heading}
           </h2>
           <div className="mt-6 grid gap-6 grid-cols-1 md:grid-cols-2">
             {videos.map((item, idx) => (
@@ -252,7 +255,7 @@ export default function App() {
           </div>
           {videos.length < allVideos.length && (
             <button onClick={loadMoreVideos} className="btn mt-4">
-              Load More Videos
+              {t.videos.loadMore}
             </button>
           )}
         </section>
@@ -261,11 +264,9 @@ export default function App() {
         <section id="contact" className="px-4 sm:px-6 lg:px-12 py-20">
           <div className="card">
             <h2 className="text-2xl sm:text-3xl font-semibold title-gradient">
-              Contact
+              {t.contact.heading}
             </h2>
-            <p className="mt-3 text-neutral-300">
-              Drop a message or blessing ✨
-            </p>
+            <p className="mt-3 text-neutral-300">{t.contact.subtitle}</p>
 
             <form
               className="mt-6 grid gap-4"
@@ -284,23 +285,35 @@ export default function App() {
                 window.open(`https://wa.me/${phone}?text=${text}`, "_blank");
               }}
             >
-              <input
-                className="card"
-                type="text"
-                name="name"
-                placeholder="Your name"
-                required
-              />
-              <textarea
-                className="card"
-                name="message"
-                placeholder="Message"
-                rows={4}
-                required
-              ></textarea>
-              <button type="submit" className="btn">
-                Send via WhatsApp
-              </button>
+              <div className="flex flex-col">
+                <input
+                  className="card"
+                  type="text"
+                  name="name"
+                  placeholder={t.contact.namePlaceholder}
+                  required
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <textarea
+                  className="card"
+                  name="message"
+                  placeholder={t.contact.messagePlaceholder}
+                  rows={4}
+                  maxLength={1000}
+                  required
+                ></textarea>
+                <span id="charCount" className="text-xs text-neutral-400 mt-1">
+                  0/1000
+                </span>
+              </div>
+
+              <div className="flex">
+                <button type="submit" className="btn mx-auto">
+                  {t.contact.button}
+                </button>
+              </div>
             </form>
           </div>
         </section>
@@ -308,7 +321,7 @@ export default function App() {
 
       <footer className="border-t border-white/10 py-8 mt-10">
         <div className="px-4 sm:px-6 lg:px-12 text-sm text-neutral-400">
-          © {new Date().getFullYear()} Divine • Built with ❤️
+          © {new Date().getFullYear()} Divine • {t.footer.builtWith}
         </div>
       </footer>
     </div>
