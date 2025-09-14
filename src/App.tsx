@@ -310,14 +310,22 @@ export default function App() {
                 />
               </div>
 
+              {/* TEXTAREA with char limit + live counter */}
               <div className="flex flex-col">
                 <textarea
                   className="card"
                   name="message"
                   placeholder={t.contact.messagePlaceholder}
                   rows={4}
-                  maxLength={1000}
+                  maxLength={1000} // 👈 limit set here
                   required
+                  onInput={(e) => {
+                    const target = e.currentTarget;
+                    const counter = document.getElementById("charCount");
+                    if (counter) {
+                      counter.textContent = `${target.value.length}/1000`;
+                    }
+                  }}
                 ></textarea>
                 <span id="charCount" className="text-xs text-neutral-400 mt-1">
                   0/1000
