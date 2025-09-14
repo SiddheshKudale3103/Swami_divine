@@ -122,7 +122,10 @@ export default function App() {
 
         {/* GALLERY */}
         <section id="gallery" className="px-4 sm:px-6 lg:px-12 py-20">
-          <h2 className="text-2xl sm:text-3xl font-semibold title-gradient">
+          <h2
+            className="text-2xl sm:text-3xl md:text-4xl font-semibold title-gradient 
+               leading-snug sm:leading-normal md:leading-relaxed break-words"
+          >
             {t.gallery.heading}
           </h2>
           <div className="mt-6 grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
@@ -165,7 +168,10 @@ export default function App() {
 
         {/* PDFs */}
         <section id="pdfs" className="px-4 sm:px-6 lg:px-12 py-20">
-          <h2 className="text-2xl sm:text-3xl font-semibold title-gradient">
+          <h2
+            className="text-2xl sm:text-3xl md:text-4xl font-semibold title-gradient 
+               leading-snug sm:leading-normal md:leading-relaxed break-words"
+          >
             {t.pdfs.heading}
           </h2>
           <div className="mt-6 grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
@@ -184,7 +190,10 @@ export default function App() {
 
         {/* POSTERS */}
         <section id="posters" className="px-4 sm:px-6 lg:px-12 py-20">
-          <h2 className="text-2xl sm:text-3xl font-semibold title-gradient">
+          <h2
+            className="text-2xl sm:text-3xl md:text-4xl font-semibold title-gradient 
+               leading-snug sm:leading-normal md:leading-relaxed break-words"
+          >
             {t.posters.heading}
           </h2>
           <div className="mt-6 grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
@@ -237,7 +246,10 @@ export default function App() {
 
         {/* VIDEOS */}
         <section id="videos" className="px-4 sm:px-6 lg:px-12 py-20">
-          <h2 className="text-2xl sm:text-3xl font-semibold title-gradient">
+          <h2
+            className="text-2xl sm:text-3xl md:text-4xl font-semibold title-gradient 
+               leading-snug sm:leading-normal md:leading-relaxed break-words"
+          >
             {t.videos.heading}
           </h2>
           <div className="mt-6 grid gap-6 grid-cols-1 md:grid-cols-2">
@@ -263,7 +275,10 @@ export default function App() {
         {/* CONTACT */}
         <section id="contact" className="px-4 sm:px-6 lg:px-12 py-20">
           <div className="card">
-            <h2 className="text-2xl sm:text-3xl font-semibold title-gradient">
+            <h2
+              className="text-2xl sm:text-3xl md:text-4xl font-semibold title-gradient 
+               leading-snug sm:leading-normal md:leading-relaxed break-words"
+            >
               {t.contact.heading}
             </h2>
             <p className="mt-3 text-neutral-300">{t.contact.subtitle}</p>
