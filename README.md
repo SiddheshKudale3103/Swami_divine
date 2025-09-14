@@ -1,27 +1,49 @@
-# Divine Portfolio (Vite + React + TypeScript + Tailwind)
+# 🌌 Divine Website
 
-## Quickstart
-1. Install deps: `npm i`
-2. Start dev: `npm run dev`
-3. Add your images/videos into `public/media/` and update paths in `src/App.tsx`
-4. Build: `npm run build` → output in `dist/`
-5. Deploy on Netlify (Connect to your Git repo or drag-drop the `dist/` folder)
+[Live Demo 🚀](https://swamidivine.netlify.app/)
 
-## Video Encoding Tips
-- Encode two formats for best coverage:
-  - **MP4 (H.264 + AAC)** — maximum compatibility (iOS/Android/macOS/Windows)
-  - **WebM (VP9 + Opus)** — efficient for Chromium/Firefox
-- Example ffmpeg commands:
-  - MP4: `ffmpeg -i input.mov -c:v libx264 -pix_fmt yuv420p -profile:v high -level 4.0 -preset veryfast -crf 22 -c:a aac -b:a 128k -movflags +faststart output.mp4`
-  - WebM: `ffmpeg -i input.mov -c:v libvpx-vp9 -b:v 0 -crf 33 -c:a libopus -b:a 96k output.webm`
-  - Poster: `ffmpeg -i output.mp4 -ss 00:00:01.000 -vframes 1 clip-1-poster.jpg`
+A modern personal Website showcasing projects, skills, and creativity.  
+Built with performance, scalability, and clean design in mind.
 
-## Netlify
-- Build command: `npm run build`
-- Publish directory: `dist`
-- Optional headers for caching (create a `_headers` file at repo root):
+---
 
-  ```
-  /media/*
-    Cache-Control: public, max-age=31536000, immutable
-  ```
+## 🛠️ Tech Stack
+
+### Frontend
+
+- **React.js** → UI library for building the web app
+- **JavaScript** → application logic
+- **TypeScript** → strongly-typed, component-driven development
+- **HTML & CSS** → base structure & styling
+- **Tailwind CSS** → advanced utility-first styling
+
+### Backend / Services
+
+- **Node.js** → runtime platform
+- **Swagger** → API documentation (`.yml`)
+- **Cloudinary** → media & data storage
+- **UptimeRobot** → cron job scheduler & uptime monitoring
+
+### Deployment & Versioning
+
+- **Git / GitHub** → version control & repo hosting
+- **Netlify** → frontend hosting & CI/CD
+- **Render** → API hosting
+
+### Security & Tracking
+
+- **Google Analytics** → traffic analysis & user insights
+
+---
+
+## ✨ Features
+
+- Responsive design (mobile-first) 📱
+- Fast load times & optimized assets ⚡
+- API-driven content for scalability 🔗
+- SEO-friendly structure for discoverability 🌍
+- Deployed with CI/CD for reliability 🚀
+
+---
+
+📌 **Website proudly built with love & modern web technologies.**
