@@ -1,3 +1,5 @@
+import { useRef, useEffect } from "react";
+
 type MediaProps = {
   src: string;
   alt?: string;
@@ -7,6 +9,9 @@ type MediaProps = {
   loading: "lazy" | "eager";
 };
 
+// Global ref to track the currently playing video
+let globalVideoRef: HTMLVideoElement | null = null;
+
 export default function Media({
   src,
   alt,
@@ -15,6 +20,26 @@ export default function Media({
   kind,
   loading = "lazy",
 }: MediaProps) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Pause previous video if a new video plays
+  useEffect(() => {
+    if (!videoRef.current) return;
+    const vid = videoRef.current;
+
+    const handlePlay = () => {
+      if (globalVideoRef && globalVideoRef !== vid) {
+        globalVideoRef.pause();
+      }
+      globalVideoRef = vid;
+    };
+
+    vid.addEventListener("play", handlePlay);
+    return () => {
+      vid.removeEventListener("play", handlePlay);
+    };
+  }, []);
+
   if (kind === "image") {
     return (
       <img
@@ -30,6 +55,7 @@ export default function Media({
     const webm = src.replace(/\.[a-zA-Z0-9]+$/, ".webm");
     return (
       <video
+        ref={videoRef}
         className={className ?? "w-full rounded-2xl"}
         controls
         playsInline

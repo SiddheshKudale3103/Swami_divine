@@ -3,6 +3,7 @@ import axios from "axios";
 import { ImageMediaData } from "../helpers/ImageMediaData";
 
 const API_BASE = "https://swami-divine-backend.onrender.com/api";
+// const SWAGGER = "https://swami-divine-backend.onrender.com/api-docs/"
 const PAGE_SIZE = 6;
 
 export default function useMediaData() {
