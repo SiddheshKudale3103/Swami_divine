@@ -5,9 +5,15 @@ import useMediaData from "./hooks/useMediaData";
 import { useState } from "react";
 import en from "./translations/en";
 import mr from "./translations/mr";
+import Maintenance from "./components/Maintenance";
 const translations = { en, mr };
 
 export default function App() {
+  const MAINTENANCE_MODE = true;
+
+  if (MAINTENANCE_MODE) {
+    return <Maintenance />;
+  }
   const {
     images,
     videos,
