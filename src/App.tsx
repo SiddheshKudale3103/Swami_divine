@@ -19,8 +19,17 @@ export default function App() {
     images: [],
     videos: [],
   });
+
   const [lang, setLang] = useState<"en" | "mr">("en");
   const t = translations[lang];
+
+  // Pagination state
+  const IMAGES_PER_PAGE = 6;
+  const VIDEOS_PER_PAGE = 4;
+  const [imagePage, setImagePage] = useState(1);
+  const [videoPage, setVideoPage] = useState(1);
+  const [visibleImages, setVisibleImages] = useState<string[]>([]);
+  const [visibleVideos, setVisibleVideos] = useState<string[]>([]);
 
   // Dynamic fetch of manifest.json
   useEffect(() => {
@@ -30,9 +39,19 @@ export default function App() {
       .catch(console.error);
   }, []);
 
-  if (MAINTENANCE_MODE) return <Maintenance />;
+  // Update visible images/videos based on page
+  useEffect(() => {
+    setVisibleImages(manifest.images.slice(0, IMAGES_PER_PAGE * imagePage));
+  }, [manifest.images, imagePage]);
 
-  const { images, videos } = manifest;
+  useEffect(() => {
+    setVisibleVideos(manifest.videos.slice(0, VIDEOS_PER_PAGE * videoPage));
+  }, [manifest.videos, videoPage]);
+
+  const loadMoreImages = () => setImagePage((prev) => prev + 1);
+  const loadMoreVideos = () => setVideoPage((prev) => prev + 1);
+
+  if (MAINTENANCE_MODE) return <Maintenance />;
 
   return (
     <div>
@@ -81,17 +100,15 @@ export default function App() {
               <p className="mt-4 text-neutral-300">{t.hero.subtitle}</p>
             </div>
             <div className="card">
-              {images.length > 0 && (
-                <motion.img
-                  src="/media/logo/hero.webp" // Static hero image
-                  alt="Hero Image"
-                  className="w-full rounded-2xl"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8 }}
-                  loading={"eager"}
-                />
-              )}
+              <motion.img
+                src="/media/logo/hero.webp" // Static hero image
+                alt="Hero Image"
+                className="w-full rounded-2xl"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+                loading={"eager"}
+              />
             </div>
           </motion.div>
         </section>
@@ -129,7 +146,7 @@ export default function App() {
             {t.gallery.heading}
           </h2>
           <div className="mt-6 grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-            {images.map((src, idx) => (
+            {visibleImages.map((src, idx) => (
               <div
                 key={idx}
                 className="w-full h-64 flex items-center justify-center rounded-2xl bg-neutral-900/40 relative group"
@@ -159,6 +176,11 @@ export default function App() {
               </div>
             ))}
           </div>
+          {visibleImages.length < manifest.images.length && (
+            <button onClick={loadMoreImages} className="btn mt-4">
+              {t.gallery.loadMore}
+            </button>
+          )}
         </section>
 
         {/* PDFs */}
@@ -186,7 +208,7 @@ export default function App() {
             {t.videos.heading}
           </h2>
           <div className="mt-6 grid gap-6 grid-cols-1 md:grid-cols-2">
-            {videos.map((src, idx) => (
+            {visibleVideos.map((src, idx) => (
               <Media
                 key={idx}
                 kind="video"
@@ -198,6 +220,11 @@ export default function App() {
               />
             ))}
           </div>
+          {visibleVideos.length < manifest.videos.length && (
+            <button onClick={loadMoreVideos} className="btn mt-4">
+              {t.videos.loadMore}
+            </button>
+          )}
         </section>
 
         {/* CONTACT */}
@@ -264,6 +291,7 @@ export default function App() {
         </section>
       </main>
 
+      {/* FOOTER */}
       <footer className="border-t border-white/10 py-8 mt-10">
         <div className="px-4 sm:px-6 lg:px-12 text-sm text-neutral-400">
           © {new Date().getFullYear()} Divine • {t.footer.builtWith}
