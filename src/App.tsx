@@ -1,34 +1,38 @@
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Media from "./components/Media";
 import { PdfMediaData } from "./helpers/PdfMediaData";
-import useMediaData from "./hooks/useMediaData";
-import { useState } from "react";
 import en from "./translations/en";
 import mr from "./translations/mr";
 import Maintenance from "./components/Maintenance";
+
 const translations = { en, mr };
 
+type MediaManifest = {
+  images: string[];
+  videos: string[];
+};
+
 export default function App() {
-  const MAINTENANCE_MODE = true;
-
-  if (MAINTENANCE_MODE) {
-    return <Maintenance />;
-  }
-  const {
-    images,
-    videos,
-    posters,
-    pdfs,
-    loadMoreImages,
-    loadMoreVideos,
-    loadMorePosters,
-    allImages,
-    allVideos,
-    allPosters,
-  } = useMediaData();
-
+  const MAINTENANCE_MODE = false;
+  const [manifest, setManifest] = useState<MediaManifest>({
+    images: [],
+    videos: [],
+  });
   const [lang, setLang] = useState<"en" | "mr">("en");
   const t = translations[lang];
+
+  // Dynamic fetch of manifest.json
+  useEffect(() => {
+    fetch("/media/manifest.json")
+      .then((res) => res.json())
+      .then(setManifest)
+      .catch(console.error);
+  }, []);
+
+  if (MAINTENANCE_MODE) return <Maintenance />;
+
+  const { images, videos } = manifest;
 
   return (
     <div>
@@ -43,12 +47,10 @@ export default function App() {
               <a
                 key={id}
                 href={"#" + id}
-                className="relative px-3 py-1 transition 
-                 text-neutral-300 hover:text-yellow-400 
-                 after:content-[''] after:absolute after:left-0 after:-bottom-1 
-                 after:h-[2px] after:w-0 after:bg-yellow-400 
-                 after:transition-all after:duration-300 
-                 hover:after:w-full"
+                className="relative px-3 py-1 transition text-neutral-300 hover:text-yellow-400 
+                  after:content-[''] after:absolute after:left-0 after:-bottom-1 
+                  after:h-[2px] after:w-0 after:bg-yellow-400 after:transition-all after:duration-300 
+                  hover:after:w-full"
               >
                 {label}
               </a>
@@ -73,12 +75,7 @@ export default function App() {
             className="grid items-center gap-10 md:grid-cols-2"
           >
             <div>
-              <h1
-                className="title-gradient font-extrabold 
-             text-3xl sm:text-5xl md:text-7xl 
-             leading-tight sm:leading-snug md:leading-normal 
-             break-words"
-              >
+              <h1 className="title-gradient font-extrabold text-3xl sm:text-5xl md:text-7xl leading-tight sm:leading-snug md:leading-normal break-words">
                 {t.hero.title}
               </h1>
               <p className="mt-4 text-neutral-300">{t.hero.subtitle}</p>
@@ -86,8 +83,8 @@ export default function App() {
             <div className="card">
               {images.length > 0 && (
                 <motion.img
-                  src="/media/logo/hero.webp"
-                  alt="Swami Logo"
+                  src="/media/logo/hero.webp" // Static hero image
+                  alt="Hero Image"
                   className="w-full rounded-2xl"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -128,35 +125,32 @@ export default function App() {
 
         {/* GALLERY */}
         <section id="gallery" className="px-4 sm:px-6 lg:px-12 py-20">
-          <h2
-            className="text-2xl sm:text-3xl md:text-4xl font-semibold title-gradient 
-               leading-snug sm:leading-normal md:leading-relaxed break-words"
-          >
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold title-gradient leading-snug sm:leading-normal md:leading-relaxed break-words">
             {t.gallery.heading}
           </h2>
           <div className="mt-6 grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-            {images.map((item, idx) => (
+            {images.map((src, idx) => (
               <div
                 key={idx}
                 className="w-full h-64 flex items-center justify-center rounded-2xl bg-neutral-900/40 relative group"
               >
                 <a
-                  href={item.url}
-                  download={item.public_id}
+                  href={src}
+                  download
                   className="w-full h-full flex items-center justify-center"
                 >
                   <Media
                     kind="image"
-                    src={item.url}
-                    alt={item.public_id}
+                    src={src}
+                    alt={`img-${idx}`}
                     className="max-w-full max-h-full object-contain rounded-2xl"
                     loading={"lazy"}
                   />
                 </a>
                 <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition">
                   <a
-                    href={item.url}
-                    download={item.public_id}
+                    href={src}
+                    download
                     className="bg-black/60 text-white text-xs px-2 py-1 rounded-md"
                   >
                     {t.gallery.download}
@@ -165,19 +159,11 @@ export default function App() {
               </div>
             ))}
           </div>
-          {images.length < allImages.length && (
-            <button onClick={loadMoreImages} className="btn mt-4">
-              {t.gallery.loadMore}
-            </button>
-          )}
         </section>
 
         {/* PDFs */}
         <section id="pdfs" className="px-4 sm:px-6 lg:px-12 py-20">
-          <h2
-            className="text-2xl sm:text-3xl md:text-4xl font-semibold title-gradient 
-               leading-snug sm:leading-normal md:leading-relaxed break-words"
-          >
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold title-gradient leading-snug sm:leading-normal md:leading-relaxed break-words">
             {t.pdfs.heading}
           </h2>
           <div className="mt-6 grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
@@ -194,97 +180,30 @@ export default function App() {
           </div>
         </section>
 
-        {/* POSTERS */}
-        <section id="posters" className="px-4 sm:px-6 lg:px-12 py-20">
-          <h2
-            className="text-2xl sm:text-3xl md:text-4xl font-semibold title-gradient 
-               leading-snug sm:leading-normal md:leading-relaxed break-words"
-          >
-            {t.posters.heading}
-          </h2>
-          <div className="mt-6 grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-            {posters.map((item, idx) => {
-              const ext = item.src.substring(item.src.lastIndexOf("."));
-              const prefix = item.src.substring(
-                0,
-                item.src.lastIndexOf("-") + 1
-              );
-              const src = `${prefix}${idx + 1}${ext}`;
-              const alt = `${item.alt}_${idx + 1}`;
-
-              return (
-                <div
-                  key={idx}
-                  className="w-full h-64 flex items-center justify-center rounded-2xl bg-neutral-900/40 relative group"
-                >
-                  <a
-                    href={src}
-                    download={alt}
-                    className="w-full h-full flex items-center justify-center"
-                  >
-                    <Media
-                      kind="image"
-                      src={src}
-                      alt={alt}
-                      className="max-w-full max-h-full object-contain rounded-2xl"
-                      loading={"lazy"}
-                    />
-                  </a>
-                  <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition">
-                    <a
-                      href={src}
-                      download={alt}
-                      className="bg-black/60 text-white text-xs px-2 py-1 rounded-md"
-                    >
-                      {t.posters.download}
-                    </a>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          {posters.length < allPosters.length && (
-            <button onClick={loadMorePosters} className="btn mt-4">
-              {t.posters.loadMore}
-            </button>
-          )}
-        </section>
-
         {/* VIDEOS */}
         <section id="videos" className="px-4 sm:px-6 lg:px-12 py-20">
-          <h2
-            className="text-2xl sm:text-3xl md:text-4xl font-semibold title-gradient 
-               leading-snug sm:leading-normal md:leading-relaxed break-words"
-          >
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold title-gradient leading-snug sm:leading-normal md:leading-relaxed break-words">
             {t.videos.heading}
           </h2>
           <div className="mt-6 grid gap-6 grid-cols-1 md:grid-cols-2">
-            {videos.map((item, idx) => (
+            {videos.map((src, idx) => (
               <Media
                 key={idx}
                 kind="video"
-                src={item.url}
-                alt={item.public_id}
-                poster={"/media/thumbnail/Thumbnail.jpeg"}
+                src={src}
+                alt={`video-${idx}`}
+                poster="/media/thumbnail/Thumbnail.jpeg"
                 className="w-full aspect-video rounded-2xl object-cover"
                 loading={"lazy"}
               />
             ))}
           </div>
-          {videos.length < allVideos.length && (
-            <button onClick={loadMoreVideos} className="btn mt-4">
-              {t.videos.loadMore}
-            </button>
-          )}
         </section>
 
         {/* CONTACT */}
         <section id="contact" className="px-4 sm:px-6 lg:px-12 py-20">
           <div className="card">
-            <h2
-              className="text-2xl sm:text-3xl md:text-4xl font-semibold title-gradient 
-               leading-snug sm:leading-normal md:leading-relaxed break-words"
-            >
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold title-gradient leading-snug sm:leading-normal md:leading-relaxed break-words">
               {t.contact.heading}
             </h2>
             <p className="mt-3 text-neutral-300">{t.contact.subtitle}</p>
@@ -300,7 +219,6 @@ export default function App() {
                 const message = (
                   form.elements.namedItem("message") as HTMLTextAreaElement
                 ).value;
-
                 const phone = "9860295215";
                 const text = encodeURIComponent(`Hi, I am ${name}. ${message}`);
                 window.open(`https://wa.me/${phone}?text=${text}`, "_blank");
@@ -316,23 +234,21 @@ export default function App() {
                 />
               </div>
 
-              {/* TEXTAREA with char limit + live counter */}
               <div className="flex flex-col">
                 <textarea
                   className="card"
                   name="message"
                   placeholder={t.contact.messagePlaceholder}
                   rows={4}
-                  maxLength={1000} // 👈 limit set here
+                  maxLength={1000}
                   required
                   onInput={(e) => {
                     const target = e.currentTarget;
                     const counter = document.getElementById("charCount");
-                    if (counter) {
+                    if (counter)
                       counter.textContent = `${target.value.length}/1000`;
-                    }
                   }}
-                ></textarea>
+                />
                 <span id="charCount" className="text-xs text-neutral-400 mt-1">
                   0/1000
                 </span>

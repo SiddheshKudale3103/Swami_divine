@@ -1,7 +1,6 @@
 export default {
   nav: {
     home: "Home",
-    posters: "Posters",
     gallery: "Photos",
     videos: "Videos",
     pdfs: "PDFs",
